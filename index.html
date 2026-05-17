@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Каримов Марат — 3D Artist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c10;
+    --surface: #0d1219;
+    --surface2: #111820;
+    --gold: #c8923a;
+    --gold-light: #e8b060;
+    --gold-dim: #7a5420;
+    --text: #d4cfc8;
+    --text-dim: #7a7570;
+    --text-bright: #f0ece6;
+    --accent: #4a8fa8;
+    --grid: rgba(200,146,58,0.06);
+    --border: rgba(200,146,58,0.18);
+    --border-dim: rgba(200,146,58,0.08);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Rajdhani', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Vignette */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(8,12,16,0.85) 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 64px 0 48px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    align-items: end;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  header::before {
+    content: 'CV / PORTFOLIO';
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--gold-dim);
+    letter-spacing: 0.25em;
+    position: absolute;
+    top: 32px;
+    left: 0;
+  }
+
+  .header-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--gold-dim);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 9vw, 96px);
+    line-height: 0.9;
+    color: var(--text-bright);
+    letter-spacing: 0.02em;
+  }
+
+  h1 span {
+    color: var(--gold);
+  }
+
+  .title-role {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--gold-light);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 14px;
+  }
+
+  .spec-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: var(--surface);
+  }
+
+  /* Contacts block */
+  .contacts {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-end;
+    min-width: 220px;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text-dim);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    transition: color 0.2s;
+  }
+
+  .contact-item:hover { color: var(--gold-light); }
+
+  .contact-icon {
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--border-dim);
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: var(--gold-dim);
+    flex-shrink: 0;
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    margin-top: 56px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .section-num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--gold-dim);
+    letter-spacing: 0.15em;
+    padding-top: 2px;
+  }
+
+  h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--text-bright);
+    letter-spacing: 0.08em;
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border) 0%, transparent 100%);
+  }
+
+  /* ── ABOUT ── */
+  .about-text {
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.65;
+    color: var(--text);
+    max-width: 720px;
+    border-left: 2px solid var(--gold-dim);
+    padding-left: 20px;
+  }
+
+  .about-text strong {
+    color: var(--gold-light);
+    font-weight: 600;
+  }
+
+  /* ── EXPERIENCE ── */
+  .job {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 0 40px;
+    padding: 32px 0;
+    border-bottom: 1px solid var(--border-dim);
+    position: relative;
+  }
+
+  .job:last-child { border-bottom: none; }
+
+  .job-meta {
+    padding-top: 2px;
+  }
+
+  .job-company {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .job-period {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 6px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+  }
+
+  .job-type {
+    display: inline-block;
+    margin-top: 10px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border: 1px solid var(--gold-dim);
+    color: var(--gold-dim);
+    letter-spacing: 0.15em;
+  }
+
+  .job-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-bright);
+    letter-spacing: 0.05em;
+    margin-bottom: 14px;
+  }
+
+  .job-duties {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .job-duties li {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-dim);
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.4;
+  }
+
+  .job-duties li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--gold-dim);
+    font-size: 10px;
+    top: 2px;
+  }
+
+  .job-note {
+    margin-top: 12px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    opacity: 0.8;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── SKILLS ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+  }
+
+  .skill-card {
+    background: var(--surface);
+    border: 1px solid var(--border-dim);
+    padding: 16px 14px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .skill-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold-dim), transparent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .skill-card:hover {
+    border-color: var(--border);
+    background: var(--surface2);
+  }
+
+  .skill-card:hover::before { opacity: 1; }
+
+  .skill-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.05em;
+  }
+
+  .skill-cat {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--gold-dim);
+    letter-spacing: 0.12em;
+    margin-top: 4px;
+  }
+
+  /* ── INFO GRID ── */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1px;
+    background: var(--border-dim);
+    border: 1px solid var(--border-dim);
+  }
+
+  .info-cell {
+    background: var(--surface);
+    padding: 20px 22px;
+  }
+
+  .info-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--gold-dim);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .info-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-bright);
+    letter-spacing: 0.04em;
+  }
+
+  /* ── PORTFOLIO LINK ── */
+  .portfolio-block {
+    margin-top: 56px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    padding: 36px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .portfolio-block::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(200,146,58,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .portfolio-block::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, var(--gold) 0%, transparent 60%);
+  }
+
+  .portfolio-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--gold-dim);
+    letter-spacing: 0.2em;
+    margin-bottom: 8px;
+  }
+
+  .portfolio-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--text-bright);
+    letter-spacing: 0.08em;
+  }
+
+  .portfolio-desc {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 6px;
+  }
+
+  .btn-portfolio {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px;
+    background: var(--gold);
+    color: #0a0a0a;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.2s, transform 0.1s;
+    flex-shrink: 0;
+  }
+
+  .btn-portfolio:hover {
+    background: var(--gold-light);
+    transform: translateY(-1px);
+  }
+
+  /* ── EDUCATION ── */
+  .edu-item {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 0 40px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--border-dim);
+  }
+
+  .edu-item:last-child { border-bottom: none; }
+
+  .edu-year {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    color: var(--gold-dim);
+    letter-spacing: 0.12em;
+    padding-top: 2px;
+  }
+
+  .edu-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-bright);
+    letter-spacing: 0.04em;
+  }
+
+  .edu-spec {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    margin-top: 72px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-dim);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-text {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate {
+    animation: fadeUp 0.6s ease forwards;
+    opacity: 0;
+  }
+
+  header { animation: fadeUp 0.7s 0.1s ease forwards; opacity: 0; }
+  section:nth-child(1) { animation: fadeUp 0.6s 0.3s ease forwards; opacity: 0; }
+  section:nth-child(2) { animation: fadeUp 0.6s 0.4s ease forwards; opacity: 0; }
+  section:nth-child(3) { animation: fadeUp 0.6s 0.5s ease forwards; opacity: 0; }
+  section:nth-child(4) { animation: fadeUp 0.6s 0.6s ease forwards; opacity: 0; }
+  section:nth-child(5) { animation: fadeUp 0.6s 0.7s ease forwards; opacity: 0; }
+  .portfolio-block { animation: fadeUp 0.6s 0.8s ease forwards; opacity: 0; }
+  footer { animation: fadeUp 0.6s 0.9s ease forwards; opacity: 0; }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    header { grid-template-columns: 1fr; gap: 32px; }
+    .contacts { align-items: flex-start; }
+    .job { grid-template-columns: 1fr; gap: 8px; }
+    .job-meta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+    .edu-item { grid-template-columns: 1fr; gap: 6px; }
+    .portfolio-block { flex-direction: column; align-items: flex-start; }
+    footer { flex-direction: column; gap: 8px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header>
+    <div>
+      <div class="header-label">3D Artist</div>
+      <h1>КАРИМОВ<br><span>МАРАТ</span></h1>
+      <div class="title-role">Hard Surface · Military · Weapons</div>
+      <div class="spec-tags">
+        <span class="tag">Военная техника</span>
+        <span class="tag">Hard Surface</span>
+        <span class="tag">Оружие</span>
+        <span class="tag">Full Pipeline</span>
+        <span class="tag">Готов к релокации</span>
+      </div>
+    </div>
+    <div class="contacts">
+      <a class="contact-item" href="mailto:kmaratru@gmail.com">
+        <span class="contact-icon">✉</span>
+        kmaratru@gmail.com
+      </a>
+      <a class="contact-item" href="https://t.me/m_monjack" target="_blank">
+        <span class="contact-icon">✈</span>
+        @m_monjack
+      </a>
+      <a class="contact-item" href="https://www.linkedin.com/in/monjack/" target="_blank">
+        <span class="contact-icon">in</span>
+        linkedin / monjack
+      </a>
+      <a class="contact-item" href="https://www.artstation.com/monjack/albums/5411924" target="_blank">
+        <span class="contact-icon">A</span>
+        artstation / monjack
+      </a>
+    </div>
+  </header>
+
+  <!-- ABOUT -->
+  <section>
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2>О СЕБЕ</h2>
+      <div class="section-line"></div>
+    </div>
+    <p class="about-text">
+      3D-художник, специализирующийся на <strong>военной технике, оружии и Hard Surface</strong>.
+      Имею коммерческий опыт полного цикла производства — от высокополигональных моделей до LOD и коллизий.
+      Работал на проектах <strong>Armored Warfare</strong> и <strong>War Thunder</strong>, а также над 3D-окружением для <strong>World of Warcraft</strong>.
+      Одинаково уверенно работаю с военной и гражданской техникой, умею создавать скины (3D и 2D), разрушенные версии моделей и кастомные модули.
+      Москва — базовая локация, <strong>открыт к переезду</strong>.
+    </p>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section>
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>ОПЫТ РАБОТЫ</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="job">
+      <div class="job-meta">
+        <div class="job-company">Pixel Sky</div>
+        <div class="job-period">1 год</div>
+        <div class="job-type">Armored Warfare · War Thunder</div>
+      </div>
+      <div>
+        <div class="job-title">3D Artist — Военная техника и оружие</div>
+        <ul class="job-duties">
+          <li>Создание новых моделей военной техники с нуля</li>
+          <li>Переработка и ремастер устаревших моделей техники</li>
+          <li>Создание разрушенных/повреждённых версий (Destroyed State)</li>
+          <li>Разработка кастомных модулей — ПТРК, камуфляж и др.</li>
+          <li>Создание 3D- и 2D-скинов для техники</li>
+          <li>Текстурирование всех типов техники и модулей</li>
+          <li>Генерация LOD и сеток коллизий</li>
+          <li>Проверка и интеграция моделей в движке</li>
+        </ul>
+        <div class="job-note">// Полный цикл: ~1–2 месяца на единицу техники</div>
+      </div>
+    </div>
+
+    <div class="job">
+      <div class="job-meta">
+        <div class="job-company">Surfside</div>
+        <div class="job-period">1 год</div>
+        <div class="job-type">World of Warcraft</div>
+      </div>
+      <div>
+        <div class="job-title">3D Artist — Окружение и реквизит</div>
+        <ul class="job-duties">
+          <li>Создание 3D-моделей окружения (props, интерьеры) для WoW</li>
+          <li>Улучшение базовых моделей для внутриигровых синематиков</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section>
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2>ИНСТРУМЕНТЫ</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <div class="skill-name">Blender</div>
+        <div class="skill-cat">Modeling</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">Maya</div>
+        <div class="skill-cat">Modeling / Rigging</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">Substance Painter</div>
+        <div class="skill-cat">Texturing</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">Substance Designer</div>
+        <div class="skill-cat">Materials</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">Marmoset Toolbag</div>
+        <div class="skill-cat">Rendering / Baking</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">Unity</div>
+        <div class="skill-cat">Engine</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">Unreal Engine</div>
+        <div class="skill-cat">Engine</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section>
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2>ОБРАЗОВАНИЕ</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="edu-item">
+      <div class="edu-year">До 2021</div>
+      <div>
+        <div class="edu-name">Российский Университет Транспорта (РУТ МИИТ)</div>
+        <div class="edu-spec">Инженер — мосты и тоннели</div>
+      </div>
+    </div>
+
+    <div class="edu-item">
+      <div class="edu-year">2021</div>
+      <div>
+        <div class="edu-name">Wargaming Academy</div>
+        <div class="edu-spec">3D-моделирование для игровой индустрии</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MISC -->
+  <section>
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2>ДОПОЛНИТЕЛЬНО</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="info-grid">
+      <div class="info-cell">
+        <div class="info-label">Локация</div>
+        <div class="info-value">Москва, Россия</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-label">Релокация</div>
+        <div class="info-value">Готов к переезду</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-label">Русский</div>
+        <div class="info-value">Родной</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-label">Английский</div>
+        <div class="info-value">A2 — базовый</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-label">Специализация</div>
+        <div class="info-value">Военная техника, оружие</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-label">Full Pipeline</div>
+        <div class="info-value">LOD, коллизии, скины</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO -->
+  <div class="portfolio-block">
+    <div>
+      <div class="portfolio-label">Портфолио</div>
+      <div class="portfolio-title">ARTSTATION / MONJACK</div>
+      <div class="portfolio-desc">Военная техника · Hard Surface · Weapons · Environment</div>
+    </div>
+    <a class="btn-portfolio" href="https://www.artstation.com/monjack/albums/5411924" target="_blank">
+      Открыть портфолио →
+    </a>
+  </div>
+
+  <footer>
+    <span class="footer-text">КАРИМОВ МАРАТ — 3D ARTIST</span>
+    <span class="footer-text">kmaratru@gmail.com</span>
+  </footer>
+
+</div>
+</body>
+</html>
